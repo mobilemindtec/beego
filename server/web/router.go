@@ -1214,11 +1214,12 @@ func (p *ControllerRegister) serveHttp(ctx *beecontext.Context) {
 				st := reflect.TypeOf(vc.Interface())				
 				
 				errorMethodName := "Finally"
+
 				if _, ok := st.MethodByName(errorMethodName); ok {
 					method := vc.MethodByName(errorMethodName)					
 					var in []reflect.Value		
 					method.Call(in)					
-					logs.Error("Finally func found")
+					logs.Debug("Finally func found")
 				}
 
 				errorMethodName = "Recover"
@@ -1227,7 +1228,7 @@ func (p *ControllerRegister) serveHttp(ctx *beecontext.Context) {
 					in := []reflect.Value{}
 					in = append(in, reflect.ValueOf(r))
 					method.Call(in)					
-					logs.Error("Recover func found")
+					logs.Debug("Recover func found")
 				}
 
 				logs.Error("------------------------------------------------------------------------------")
@@ -1235,7 +1236,7 @@ func (p *ControllerRegister) serveHttp(ctx *beecontext.Context) {
 				logs.Error("begoo unknow error recover: %v", r)
 				logs.Error("------------------------------------------------------------------------------")
 				logs.Error("------------------------------------------------------------------------------")
-
+				
 				panic(r)
 			}
 		}()			
