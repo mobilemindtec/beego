@@ -856,6 +856,23 @@ func (p *ControllerRegister) serveHttp(ctx *beecontext.Context) {
 		}
 
 		execController.URLMapping()
+		
+		// call Finally method of controller if unknow errors happen
+		defer func() {			
+			if r := recover(); r != nil {
+
+				errorMethodName := "Finally"
+				st := reflect.TypeOf(vc.Interface())				
+				if _, ok := st.MethodByName(errorMethodName); ok {
+					method := vc.MethodByName(errorMethodName)					
+					var in []reflect.Value		
+					method.Call(in)					
+				}
+
+				logs.Error("unknow error recover: %v", r)
+				panic(r)
+			}
+		}()			
 
 		if !ctx.ResponseWriter.Started {
 			// exec main logic
