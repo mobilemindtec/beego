@@ -47,7 +47,25 @@ func (f StrTo) Exist() bool {
 
 // Bool string to bool
 func (f StrTo) Bool() (bool, error) {
-	return strconv.ParseBool(f.String())
+	ret, err := strconv.ParseBool(f.String())
+
+	if err == nil {
+		return ret, err
+	}
+
+	// abaixo tratar mysql type bit, f chega com notacao \x
+	var concat string
+	for i := 0; i < len(f.String()); i++ {
+        concat += fmt.Sprintf("%x", f.String()[i])
+    }
+
+	retAsInt, err := strconv.Atoi(concat)
+
+	if err != nil {
+		return false, err
+	}else{
+		return retAsInt == 1, nil
+	}
 }
 
 // Float32 string to float32
