@@ -163,7 +163,7 @@ func (o *orm) ReadOrCreate(md interface{}, col1 string, cols ...string) (bool, i
 }
 
 // insert model data to database
-func (o *orm) Insert(md interface{}) (int64, error) {
+func (o *orm) Insert(md interface{}) (int64, error) {	
 	mi, ind := o.getMiInd(md, true)
 	id, err := o.alias.DbBaser.Insert(o.db, mi, ind, o.alias.TZ)
 	if err != nil {
