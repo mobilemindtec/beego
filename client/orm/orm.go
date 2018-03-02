@@ -177,6 +177,7 @@ func (o *ormBase) ReadOrCreateWithCtx(ctx context.Context, md interface{}, col1 
 func (o *ormBase) Insert(md interface{}) (int64, error) {
 	return o.InsertWithCtx(context.Background(), md)
 }
+
 func (o *ormBase) InsertWithCtx(ctx context.Context, md interface{}) (int64, error) {
 	mi, ind := o.getMiInd(md, true)
 	id, err := o.alias.DbBaser.Insert(o.db, mi, ind, o.alias.TZ)
