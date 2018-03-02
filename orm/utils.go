@@ -110,11 +110,11 @@ func (f StrTo) Int64() (int64, error) {
 		i := new(big.Int)
 		ni, ok := i.SetString(f.String(), 10) // octal
 		if !ok {
-			return int64(v), err
+			return v, err
 		}
 		return ni.Int64(), nil
 	}
-	return int64(v), err
+	return v, err
 }
 
 // Uint string to uint
@@ -148,11 +148,11 @@ func (f StrTo) Uint64() (uint64, error) {
 		i := new(big.Int)
 		ni, ok := i.SetString(f.String(), 10)
 		if !ok {
-			return uint64(v), err
+			return v, err
 		}
 		return ni.Uint64(), nil
 	}
-	return uint64(v), err
+	return v, err
 }
 
 // String string to string
@@ -243,7 +243,7 @@ func camelString(s string) string {
 		if d == '_' {
 			flag = true
 			continue
-		} else if flag == true {
+		} else if flag {
 			if d >= 'a' && d <= 'z' {
 				d = d - 32
 			}

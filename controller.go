@@ -28,6 +28,7 @@ import (
 	"strings"
 
 	"github.com/astaxie/beego/context"
+	"github.com/astaxie/beego/context/param"
 	"github.com/astaxie/beego/session"
 )
 
@@ -51,7 +52,15 @@ type ControllerComments struct {
 	Router           string
 	AllowHTTPMethods []string
 	Params           []map[string]string
+	MethodParams     []*param.MethodParam
 }
+
+// ControllerCommentsSlice implements the sort interface
+type ControllerCommentsSlice []ControllerComments
+
+func (p ControllerCommentsSlice) Len() int           { return len(p) }
+func (p ControllerCommentsSlice) Less(i, j int) bool { return p[i].Router < p[j].Router }
+func (p ControllerCommentsSlice) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
 
 // Controller defines some basic http request handler operations, such as
 // http context, template and view, session and xsrf.
@@ -223,7 +232,7 @@ func (c *Controller) RenderBytes() ([]byte, error) {
 		}
 
 		buf.Reset()
-		ExecuteViewPathTemplate(&buf, c.Layout, c.viewPath() ,c.Data)
+		ExecuteViewPathTemplate(&buf, c.Layout, c.viewPath(), c.Data)
 	}
 	return buf.Bytes(), err
 }
@@ -249,7 +258,7 @@ func (c *Controller) renderTemplate() (bytes.Buffer, error) {
 				}
 			}
 		}
-		BuildTemplate(c.viewPath() , buildFiles...)
+		BuildTemplate(c.viewPath(), buildFiles...)
 	}
 	return buf, ExecuteViewPathTemplate(&buf, c.TplName, c.viewPath(), c.Data)
 }
@@ -314,7 +323,7 @@ func (c *Controller) ServeJSON(encoding ...bool) {
 	if BConfig.RunMode == PROD {
 		hasIndent = false
 	}
-	if len(encoding) > 0 && encoding[0] == true {
+	if len(encoding) > 0 && encoding[0] {
 		hasEncoding = true
 	}
 	c.Ctx.Output.JSON(c.Data["json"], hasIndent, hasEncoding)

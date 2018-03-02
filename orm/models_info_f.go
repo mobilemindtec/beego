@@ -47,7 +47,7 @@ func (f *fields) Add(fi *fieldInfo) (added bool) {
 	} else {
 		return
 	}
-	if _, ok := f.fieldsByType[fi.fieldType]; ok == false {
+	if _, ok := f.fieldsByType[fi.fieldType]; !ok {
 		f.fieldsByType[fi.fieldType] = make([]*fieldInfo, 0)
 	}
 	f.fieldsByType[fi.fieldType] = append(f.fieldsByType[fi.fieldType], fi)
@@ -244,8 +244,10 @@ checkType:
 		if err != nil {
 			goto end
 		}
-		if fieldType == TypeCharField {
+		if fieldType == TypeVarCharField {
 			switch tags["type"] {
+			case "char":
+				fieldType = TypeCharField
 			case "text":
 				fieldType = TypeTextField
 			case "json":
@@ -334,12 +336,12 @@ checkType:
 		switch onDelete {
 		case odCascade, odDoNothing:
 		case odSetDefault:
-			if initial.Exist() == false {
+			if !initial.Exist() {
 				err = errors.New("on_delete: set_default need set field a default value")
 				goto end
 			}
 		case odSetNULL:
-			if fi.null == false {
+			if !fi.null {
 				err = errors.New("on_delete: set_null need set field null")
 				goto end
 			}
@@ -357,7 +359,7 @@ checkType:
 
 	switch fieldType {
 	case TypeBooleanField:
-	case TypeCharField, TypeJSONField, TypeJsonbField:
+	case TypeVarCharField, TypeCharField, TypeJSONField, TypeJsonbField:
 		if size != "" {
 			v, e := StrTo(size).Int32()
 			if e != nil {
