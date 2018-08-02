@@ -825,7 +825,7 @@ func (p *ControllerRegister) ServeHTTP(rw http.ResponseWriter, r *http.Request) 
 		// call Finally method of controller if unknow errors happen
 		defer func() {			
 			if r := recover(); r != nil {
-
+				vc := reflect.New(runRouter)
 				errorMethodName := "Finally"
 				st := reflect.TypeOf(vc.Interface())				
 				if _, ok := st.MethodByName(errorMethodName); ok {
