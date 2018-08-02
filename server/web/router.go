@@ -1177,6 +1177,7 @@ func (p *ControllerRegister) serveHttp(ctx *beecontext.Context) {
 
 		execController.URLMapping()
 		
+
 		// call Finally method of controller if unknow errors happen
 		defer func() {			
 			if r := recover(); r != nil {
@@ -1211,6 +1212,7 @@ func (p *ControllerRegister) serveHttp(ctx *beecontext.Context) {
 				panic(r)
 			}
 		}()			
+		
 
 		if !ctx.ResponseWriter.Started {
 			// exec main logic
