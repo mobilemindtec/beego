@@ -94,7 +94,7 @@ func TestCompareRelated(t *testing.T) {
 }
 
 func TestHtmlquote(t *testing.T) {
-	h := `&lt;&#39;&nbsp;&rdquo;&ldquo;&amp;&quot;&gt;`
+	h := `&lt;&#39;&nbsp;&rdquo;&ldquo;&amp;&#34;&gt;`
 	s := `<' ”“&">`
 	if Htmlquote(s) != h {
 		t.Error("should be equal")
@@ -102,8 +102,8 @@ func TestHtmlquote(t *testing.T) {
 }
 
 func TestHtmlunquote(t *testing.T) {
-	h := `&lt;&#39;&nbsp;&rdquo;&ldquo;&amp;&quot;&gt;`
-	s := `<' ”“&">`
+	h := `&lt;&#39;&nbsp;&rdquo;&ldquo;&amp;&#34;&gt;`
+	s := `<' ”“&">`
 	if Htmlunquote(h) != s {
 		t.Error("should be equal")
 	}
@@ -329,7 +329,7 @@ func TestMapGet(t *testing.T) {
 	}
 
 	// test 2 level map
-	m2 := map[string]interface{}{
+	m2 := M{
 		"1": map[string]float64{
 			"2": 3.5,
 		},
@@ -344,11 +344,11 @@ func TestMapGet(t *testing.T) {
 	}
 
 	// test 5 level map
-	m5 := map[string]interface{}{
-		"1": map[string]interface{}{
-			"2": map[string]interface{}{
-				"3": map[string]interface{}{
-					"4": map[string]interface{}{
+	m5 := M{
+		"1": M{
+			"2": M{
+				"3": M{
+					"4": M{
 						"5": 1.2,
 					},
 				},
