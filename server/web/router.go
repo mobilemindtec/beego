@@ -1180,16 +1180,31 @@ func (p *ControllerRegister) serveHttp(ctx *beecontext.Context) {
 		// call Finally method of controller if unknow errors happen
 		defer func() {			
 			if r := recover(); r != nil {
-				vc := reflect.New(runRouter)
-				errorMethodName := "Finally"
+				
+				vc := reflect.ValueOf(execController) //reflect.New(runRouter)				
 				st := reflect.TypeOf(vc.Interface())				
+				
+				errorMethodName := "Finally"
 				if _, ok := st.MethodByName(errorMethodName); ok {
 					method := vc.MethodByName(errorMethodName)					
 					var in []reflect.Value		
 					method.Call(in)					
 				}
 
-				logs.Error("unknow error recover: %v", r)
+				errorMethodName = "Recover"
+				if _, ok := st.MethodByName(errorMethodName); ok {
+					method := vc.MethodByName(errorMethodName)					
+					in := []reflect.Value{}
+					in = append(in, reflect.ValueOf(r))
+					method.Call(in)					
+				}
+
+				logs.Error("------------------------------------------------------------------------------")
+				logs.Error("------------------------------------------------------------------------------")
+				logs.Error("begoo unknow error recover: %v", r)
+				logs.Error("------------------------------------------------------------------------------")
+				logs.Error("------------------------------------------------------------------------------")
+
 				panic(r)
 			}
 		}()			
