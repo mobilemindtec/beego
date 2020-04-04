@@ -1207,7 +1207,7 @@ func (p *ControllerRegister) serveHttp(ctx *beecontext.Context) {
 				
 				panic(r)
 			}
-		}()			
+		}()					
 		
 
 		if !ctx.ResponseWriter.Started {
