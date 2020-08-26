@@ -112,6 +112,7 @@ type fieldInfo struct {
 	toText              bool
 	autoNow             bool
 	autoNowAdd          bool
+	ignoreUpdate          bool
 	rel                 bool // if type equal to RelForeignKey, RelOneToOne, RelManyToMany then true
 	reverse             bool
 	isFielder           bool // implement Fielder interface
@@ -308,7 +309,8 @@ checkType:
 	fi.auto = attrs["auto"]
 	fi.pk = attrs["pk"]
 	fi.unique = attrs["unique"]
-
+	fi.ignoreUpdate = attrs["ignore_update"]
+	
 	// Mark object property if there is attribute "default" in the orm configuration
 	if _, ok := tags["default"]; ok {
 		fi.colDefault = true
