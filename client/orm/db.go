@@ -634,9 +634,12 @@ func (d *dbBase) Update(ctx context.Context, q dbQuerier, mi *modelInfo, ind ref
 		return 0, err
 	}
 
+
+	
 	var findAutoNowAdd, findAutoNow bool
-	var index int
+	var index int	
 	for i, col := range setNames {
+		
 		if mi.fields.GetByColumn(col).autoNowAdd {
 			index = i
 			findAutoNowAdd = true
@@ -644,8 +647,13 @@ func (d *dbBase) Update(ctx context.Context, q dbQuerier, mi *modelInfo, ind ref
 		if mi.fields.GetByColumn(col).autoNow {
 			findAutoNow = true
 		}
+		if mi.fields.GetByColumn(col).ignoreUpdate {
+			setNames = append(setNames[0:i], setNames[i+1:]...)
+			setValues = append(setValues[0:i], setValues[i+1:]...)
+		}
 	}
-	if findAutoNowAdd {
+	
+	if findAutoNowAdd  {
 		setNames = append(setNames[0:index], setNames[index+1:]...)
 		setValues = append(setValues[0:index], setValues[index+1:]...)
 	}
