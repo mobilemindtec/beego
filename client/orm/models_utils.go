@@ -46,6 +46,7 @@ var supportTag = map[string]int{
 	"type":         2,
 	"description":  2,
 	"precision":    2,
+	"ignore_update":  1,
 }
 
 // get reflect.Type name with package path.
