@@ -270,11 +270,11 @@ func (ctx *Context) XSRFToken(key string, expire int64) string {
 		token, ok := ctx.GetSecureCookie(key, "_xsrf")		
 		if !ok {
 			token = string(utils.RandomCreateBytes(32))			
-			secure := ctx.Input.Scheme() == "https" // http don't support secure cookie flag			
+			secure := ctx.Request.URL.Scheme == "https" // http don't support secure cookie flag
 			ctx.SetSecureCookie(key, "_xsrf", token, expire, "", "", secure, true)
 		}
 		ctx._xsrfToken = token
-	}		
+	}	
 	return ctx._xsrfToken
 }
 // CheckXSRFCookie checks if the XSRF token in this request is valid or not.
