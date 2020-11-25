@@ -772,7 +772,7 @@ func (c *Controller) XSRFToken() string {
 			expire = int64(c.XSRFExpire)
 		}
 		c._xsrfToken = c.Ctx.XSRFToken(BConfig.WebConfig.XSRFKey, expire)
-	}
+	}	
 	return c._xsrfToken
 }
 

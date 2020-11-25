@@ -344,6 +344,7 @@ type WebConfig struct {
 
 // SessionConfig holds session related config
 type SessionConfig struct {
+<<<<<<< HEAD
 	// SessionOn
 	// @Description if it's true, Beego will auto manage session
 	// @Default false
