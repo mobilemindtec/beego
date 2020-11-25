@@ -18,6 +18,7 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+	"fmt"
 )
 
 const (
@@ -48,6 +49,13 @@ func AddAPPStartHook(hf ...hookfunc) {
 // beego.Run(":8089")
 // beego.Run("127.0.0.1:8089")
 func Run(params ...string) {
+
+	fmt.Println("********************************************")
+	fmt.Println("--------------------------------------------")
+	fmt.Println("+++ Run Beego Mobile Mind Custom Version +++")
+	fmt.Println("--------------------------------------------")
+	fmt.Println("********************************************")
+
 	if len(params) > 0 && params[0] != "" {
 		BeeApp.Run(params[0])
 	}
