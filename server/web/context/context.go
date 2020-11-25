@@ -108,6 +108,7 @@ func (ctx *Context) SetCookie(name string, value string, others ...interface{}) 
 // GetSecureCookie gets a secure cookie from a request for a given key.
 func (ctx *Context) GetSecureCookie(Secret, key string) (string, bool) {
 	val := ctx.Input.Cookie(key)
+
 	if val == "" {
 		return "", false
 	}
@@ -139,20 +140,21 @@ func (ctx *Context) SetSecureCookie(Secret, name, value string, others ...interf
 	h := hmac.New(sha256.New, []byte(Secret))
 	fmt.Fprintf(h, "%s%s", vs, timestamp)
 	sig := fmt.Sprintf("%02x", h.Sum(nil))
-	cookie := strings.Join([]string{vs, timestamp, sig}, "|")
+	cookie := strings.Join([]string{vs, timestamp, sig}, "|")	
 	ctx.Output.Cookie(name, cookie, others...)
 }
 
 // XSRFToken creates and returns an xsrf token string
 func (ctx *Context) XSRFToken(key string, expire int64) string {
 	if ctx._xsrfToken == "" {
-		token, ok := ctx.GetSecureCookie(key, "_xsrf")
+		token, ok := ctx.GetSecureCookie(key, "_xsrf")		
 		if !ok {
-			token = string(utils.RandomCreateBytes(32))
-			ctx.SetSecureCookie(key, "_xsrf", token, expire, "", "", true, true)
+			token = string(utils.RandomCreateBytes(32))			
+			secure := ctx.Request.URL.Scheme == "https" // http don't support secure cookie flag
+			ctx.SetSecureCookie(key, "_xsrf", token, expire, "", "", secure, true)
 		}
 		ctx._xsrfToken = token
-	}
+	}	
 	return ctx._xsrfToken
 }
 
@@ -171,6 +173,7 @@ func (ctx *Context) CheckXSRFCookie() bool {
 		ctx.Abort(422, "422")
 		return false
 	}
+
 	if ctx._xsrfToken != token {
 		ctx.Abort(417, "417")
 		return false
