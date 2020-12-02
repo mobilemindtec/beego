@@ -170,6 +170,9 @@ func (ctx *Context) CheckXSRFCookie() bool {
 		token = ctx.Request.Header.Get("X-Csrftoken")
 	}
 	if token == "" {
+		token = ctx.Request.Header.Get("X-CSRFToken")
+	}
+	if token == "" {
 		ctx.Abort(422, "422")
 		return false
 	}
