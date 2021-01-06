@@ -278,7 +278,7 @@ func (ctx *Context) XSRFToken(key string, expire int64) string {
 	}	
 
 	fmt.Println("CSRF token = %v | URL Scheme = %v", ctx._xsrfToken, ctx.Request.URL.Scheme)
-	
+
 	return ctx._xsrfToken
 }
 // CheckXSRFCookie checks if the XSRF token in this request is valid or not.
