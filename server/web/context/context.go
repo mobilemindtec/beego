@@ -275,7 +275,6 @@ func (ctx *Context) XSRFToken(key string, expire int64) string {
 		}
 		ctx._xsrfToken = token
 	}	
-
 	return ctx._xsrfToken
 }
 
