@@ -15,7 +15,7 @@
 // Package context provide the context utils
 // Usage:
 //
-//	import "github.com/astaxie/beego/context"
+//	import "github.com/beego/beego/v2/context"
 //
 //	ctx := context.Context{Request:req,ResponseWriter:rw}
 //
@@ -35,7 +35,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/astaxie/beego/core/utils"
+	"github.com/beego/beego/v2/core/utils"
 )
 
 // Commonly used mime-types
@@ -149,10 +149,14 @@ func (ctx *Context) XSRFToken(key string, expire int64) string {
 	if ctx._xsrfToken == "" {
 		token, ok := ctx.GetSecureCookie(key, "_xsrf")		
 		if !ok {
-			token = string(utils.RandomCreateBytes(32))			
-			secure := ctx.Request.URL.Scheme != "http" // http don't support secure cookie flag
-			fmt.Println("CSRF token secure = %v - token = %v | URL Scheme = %v | URL = %v", secure, token, ctx.Request.URL.Scheme, ctx.Request.URL)
-			ctx.SetSecureCookie(key, "_xsrf", token, expire, "", "", secure, true)
+			//token = string(utils.RandomCreateBytes(32))			
+			//secure := ctx.Request.URL.Scheme != "http" // http don't support secure cookie flag
+			//fmt.Println("CSRF token secure = %v - token = %v | URL Scheme = %v | URL = %v", secure, token, ctx.Request.URL.Scheme, ctx.Request.URL)
+			//ctx.SetSecureCookie(key, "_xsrf", token, expire, "", "", secure, true)
+
+			token = string(utils.RandomCreateBytes(32))
+			// TODO make it configurable
+			ctx.SetSecureCookie(key, "_xsrf", token, expire, "", "")
 		}
 
 		ctx._xsrfToken = token
@@ -233,7 +237,7 @@ func (r *Response) Write(p []byte) (int, error) {
 // and sets `Started` to true.
 func (r *Response) WriteHeader(code int) {
 	if r.Status > 0 {
-		//prevent multiple response.WriteHeader calls
+		// prevent multiple response.WriteHeader calls
 		return
 	}
 	r.Status = code

@@ -12,24 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package adapter
+package logs
 
-import (
-	"net/http"
-	"path/filepath"
-
-	"github.com/beego/beego/v2/server/web"
-)
-
-type FileSystem web.FileSystem
-
-func (d FileSystem) Open(name string) (http.File, error) {
-	return (web.FileSystem)(d).Open(name)
-}
-
-// Walk walks the file tree rooted at root in filesystem, calling walkFn for each file or
-// directory in the tree, including root. All errors that arise visiting files
-// and directories are filtered by walkFn.
-func Walk(fs http.FileSystem, root string, walkFn filepath.WalkFunc) error {
-	return web.Walk(fs, root, walkFn)
-}
+// func TestSLACKWriter_WriteMsg(t *testing.T) {
+// 	sc := `
+// {
+//   "webhookurl":"",
+//   "level":7
+// }
+// `
+// 	l := newSLACKWriter()
+// 	err := l.Init(sc)
+// 	if err != nil {
+// 		Debug(err)
+// 	}
+//
+// 	err = l.WriteMsg(&LogMsg{
+// 		Level: 7,
+// 		Msg: `{ "abs"`,
+// 		When: time.Now(),
+// 		FilePath: "main.go",
+// 		LineNumber: 100,
+// 		enableFullFilePath: true,
+// 		enableFuncCallDepth: true,
+// 	})
+//
+// 	if err != nil {
+// 		Debug(err)
+// 	}
+//
+// }
