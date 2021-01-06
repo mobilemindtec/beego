@@ -302,7 +302,11 @@ func (ctx *Context) CheckXSRFCookie() bool {
 	}
 
 	if ctx._xsrfToken != token {
+<<<<<<< HEAD
 		//fmt.Println("CSRF token expected = %v, found = %v", ctx._xsrfToken, token)
+=======
+		fmt.Println("CSRF token expected = %v, found = %v", ctx._xsrfToken, token)
+>>>>>>> add logs CSRF token
 		ctx.Abort(417, "417")
 		return false
 	}
