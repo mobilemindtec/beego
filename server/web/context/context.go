@@ -277,7 +277,7 @@ func (ctx *Context) XSRFToken(key string, expire int64) string {
 		ctx._xsrfToken = token
 	}	
 
-	fmt.Println("CSRF token = %v | URL Scheme = %v", ctx._xsrfToken, ctx.Request.URL.Scheme)
+	fmt.Println("CSRF token = %v | URL Scheme = %v | | URL = %v", ctx._xsrfToken, ctx.Request.URL)
 
 	return ctx._xsrfToken
 }
