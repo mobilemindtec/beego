@@ -270,7 +270,7 @@ func (ctx *Context) XSRFToken(key string, expire int64) string {
 		token, ok := ctx.GetSecureCookie(key, "_xsrf")		
 		if !ok {
 			token = string(utils.RandomCreateBytes(32))			
-			secure := ctx.Request.URL.Scheme == "https" || strings.TrimSpace(ctx.Request.URL.Scheme) == "" // http don't support secure cookie flag
+			secure := ctx.Request.URL.Scheme != "http" // http don't support secure cookie flag
 			fmt.Println("CSRF token secure = %v - token = %v | URL Scheme = %v", secure, token, ctx.Request.URL.Scheme)
 			ctx.SetSecureCookie(key, "_xsrf", token, expire, "", "", secure, true)
 		}
