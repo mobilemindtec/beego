@@ -277,7 +277,6 @@ func (ctx *Context) XSRFToken(key string, expire int64) string {
 	}		
 	return ctx._xsrfToken
 }
-
 // CheckXSRFCookie checks if the XSRF token in this request is valid or not.
 // The token can be provided in the request header in the form "X-Xsrftoken" or "X-CsrfToken"
 // or in form field value named as "_xsrf".
@@ -299,10 +298,14 @@ func (ctx *Context) CheckXSRFCookie() bool {
 
 	if ctx._xsrfToken != token {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		//fmt.Println("CSRF token expected = %v, found = %v", ctx._xsrfToken, token)
 =======
 		fmt.Println("CSRF token expected = %v, found = %v", ctx._xsrfToken, token)
 >>>>>>> add logs CSRF token
+=======
+		//fmt.Println("CSRF token expected = %v, found = %v", ctx._xsrfToken, token)
+>>>>>>> changes
 		ctx.Abort(417, "417")
 		return false
 	}
