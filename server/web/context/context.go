@@ -274,8 +274,7 @@ func (ctx *Context) XSRFToken(key string, expire int64) string {
 			ctx.SetSecureCookie(key, "_xsrf", token, expire, "", "", secure, true)
 		}
 		ctx._xsrfToken = token
-	}	
-	
+	}		
 	return ctx._xsrfToken
 }
 
