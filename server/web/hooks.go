@@ -63,7 +63,6 @@ func registerSession() error {
 			conf.EnableSidInURLQuery = BConfig.WebConfig.Session.SessionEnableSidInURLQuery
 			conf.CookieSameSite = BConfig.WebConfig.Session.SessionCookieSameSite
 			conf.SessionIDPrefix = BConfig.WebConfig.Session.SessionIDPrefix
-
 		} else {
 			if err = json.Unmarshal([]byte(sessionConfig), conf); err != nil {
 				return err
