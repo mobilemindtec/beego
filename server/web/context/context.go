@@ -277,7 +277,7 @@ func (ctx *Context) XSRFToken(key string, expire int64) string {
 		ctx._xsrfToken = token
 	}	
 
-	fmt.Println("CSRF token = %v | URL Scheme = %v | | URL = %v", ctx._xsrfToken, ctx.Request.URL)
+	//fmt.Println("URL Scheme = %v | URL = %v | CSRF token = %v", ctx.Input.Scheme(), ctx.Request.URL, ctx._xsrfToken)
 
 	return ctx._xsrfToken
 }
@@ -301,11 +301,6 @@ func (ctx *Context) CheckXSRFCookie() bool {
 	}
 
 	if ctx._xsrfToken != token {
-<<<<<<< HEAD
-		//fmt.Println("CSRF token expected = %v, found = %v", ctx._xsrfToken, token)
-=======
-		fmt.Println("CSRF token expected = %v, found = %v", ctx._xsrfToken, token)
->>>>>>> db5d3f2b (add logs CSRF token)
 		ctx.Abort(417, "417")
 		return false
 	}
