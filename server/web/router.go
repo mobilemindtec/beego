@@ -868,6 +868,7 @@ func (p *ControllerRegister) serveHttp(ctx *beecontext.Context) {
 					method := vc.MethodByName(errorMethodName)					
 					var in []reflect.Value		
 					method.Call(in)					
+					logs.Error("Finally func found")
 				}
 
 				errorMethodName = "Recover"
@@ -876,6 +877,7 @@ func (p *ControllerRegister) serveHttp(ctx *beecontext.Context) {
 					in := []reflect.Value{}
 					in = append(in, reflect.ValueOf(r))
 					method.Call(in)					
+					logs.Error("Recover func found")
 				}
 
 				logs.Error("------------------------------------------------------------------------------")
