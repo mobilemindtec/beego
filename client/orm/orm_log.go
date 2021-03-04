@@ -65,6 +65,8 @@ func debugLogQueies(alias *alias, operaton, query string, t time.Time, err error
 		LogFunc(logMap)
 	}
 	DebugLog.Println(con)
+	fmt.Println("------")
+	fmt.Println(con)
 }
 
 // statement query logger struct.
