@@ -410,6 +410,7 @@ type SessionConfig struct {
 	// @Description session id's prefix
 	// @Default ""
 	SessionIDPrefix string
+
 }
 
 // LogConfig holds Log related config

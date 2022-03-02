@@ -274,7 +274,7 @@ func (ctx *Context) XSRFToken(key string, expire int64) string {
 			ctx.SetSecureCookie(key, "_xsrf", token, expire, "", "", secure, true)
 		}
 		ctx._xsrfToken = token
-	}		
+	}	
 	return ctx._xsrfToken
 }
 // CheckXSRFCookie checks if the XSRF token in this request is valid or not.
@@ -297,6 +297,7 @@ func (ctx *Context) CheckXSRFCookie() bool {
 	}
 
 	if ctx._xsrfToken != token {
+		//fmt.Println("CSRF token expected = %v, found = %v", ctx._xsrfToken, token)
 		ctx.Abort(417, "417")
 		return false
 	}
