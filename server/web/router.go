@@ -977,6 +977,41 @@ func (p *ControllerRegister) ServeHTTP(rw http.ResponseWriter, r *http.Request) 
 	p.chainRoot.filter(ctx, p.getUrlPath(ctx), preFilterParams)
 }
 
+func (p *ControllerRegister) execPanicOnError(execController ControllerInterface, r interface{}) {
+	vc := reflect.ValueOf(execController) //reflect.New(runRouter)				
+	st := reflect.TypeOf(vc.Interface())				
+	
+	errorMethodName := "Finally"
+	if _, ok := st.MethodByName(errorMethodName); ok {
+		method := vc.MethodByName(errorMethodName)					
+		var in []reflect.Value		
+		method.Call(in)					
+		logs.Debug("Finally func found")
+	} else {
+		logs.Debug("Finally func NOT found")
+	}
+
+	errorMethodName = "Recover"
+	if _, ok := st.MethodByName(errorMethodName); ok {
+		method := vc.MethodByName(errorMethodName)					
+		in := []reflect.Value{}
+		in = append(in, reflect.ValueOf(r))
+		method.Call(in)					
+		logs.Debug("Recover func found")
+	} else {
+		logs.Debug("Recover func NOT found")
+	}
+
+	logs.Error("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+	logsXError("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+	logsXError("XXXXXXXXXXXXXXXXXXXX begoo unknow error recover XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+	logsXError("XXXXXXXXXXXXXX %v", r)
+	logsXError("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+	logsXError("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+	
+	panic(r)	
+}
+
 func (p *ControllerRegister) serveHttp(ctx *beecontext.Context) {
 	var err error
 	startTime := time.Now()
@@ -1180,35 +1215,7 @@ func (p *ControllerRegister) serveHttp(ctx *beecontext.Context) {
 		// call Finally method of controller if unknow errors happen
 		defer func() {			
 			if r := recover(); r != nil {
-				
-				vc := reflect.ValueOf(execController) //reflect.New(runRouter)				
-				st := reflect.TypeOf(vc.Interface())				
-				
-				errorMethodName := "Finally"
-
-				if _, ok := st.MethodByName(errorMethodName); ok {
-					method := vc.MethodByName(errorMethodName)					
-					var in []reflect.Value		
-					method.Call(in)					
-					logs.Debug("Finally func found")
-				}
-
-				errorMethodName = "Recover"
-				if _, ok := st.MethodByName(errorMethodName); ok {
-					method := vc.MethodByName(errorMethodName)					
-					in := []reflect.Value{}
-					in = append(in, reflect.ValueOf(r))
-					method.Call(in)					
-					logs.Debug("Recover func found")
-				}
-
-				logs.Error("------------------------------------------------------------------------------")
-				logs.Error("------------------------------------------------------------------------------")
-				logs.Error("begoo unknow error recover: %v", r)
-				logs.Error("------------------------------------------------------------------------------")
-				logs.Error("------------------------------------------------------------------------------")
-				
-				panic(r)
+				p.execPanicOnError(execController, r)
 			}
 		}()		
 
