@@ -1005,27 +1005,28 @@ func (p *ControllerRegister) ServeHTTP(rw http.ResponseWriter, r *http.Request) 
 func (p *ControllerRegister) execPanicOnError(execController ControllerInterface, r interface{}) {
 	vc := reflect.ValueOf(execController) //reflect.New(runRouter)				
 	st := reflect.TypeOf(vc.Interface())				
-	
-	errorMethodName := "Finally"
-	if _, ok := st.MethodByName(errorMethodName); ok {
-		method := vc.MethodByName(errorMethodName)					
-		var in []reflect.Value		
-		method.Call(in)					
-		logs.Debug("Finally func found")
-	} else {
-		logs.Debug("Finally func NOT found")
-	}
 
-	errorMethodName = "Recover"
-	if _, ok := st.MethodByName(errorMethodName); ok {
-		method := vc.MethodByName(errorMethodName)					
+
+	recoverMethod := "Recover"
+	if _, ok := st.MethodByName(recoverMethod); ok {
+		method := vc.MethodByName(recoverMethod)					
 		in := []reflect.Value{}
 		in = append(in, reflect.ValueOf(r))
-		method.Call(in)					
 		logs.Debug("Recover func found")
+		method.Call(in)					
 	} else {
 		logs.Debug("Recover func NOT found")
 	}
+
+	finallyMethod := "Finally"
+	if _, ok := st.MethodByName(finallyMethod); ok {
+		method := vc.MethodByName(finallyMethod)					
+		var in []reflect.Value		
+		logs.Debug("Finally func found")
+		method.Call(in)					
+	} else {
+		logs.Debug("Finally func NOT found")
+	}	
 
 	logs.Error("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 	logs.Error("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
