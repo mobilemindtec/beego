@@ -122,6 +122,7 @@ func (output *BeegoOutput) Cookie(name string, value string, others ...interface
 	if len(others) > 1 {
 		if v, ok := others[1].(string); ok && len(v) > 0 {
 			tmpPath = sanitizeValue(v)
+		}
 	}
 
 	fmt.Fprintf(&b, "; Path=%s", tmpPath)
@@ -156,17 +157,12 @@ func (output *BeegoOutput) Cookie(name string, value string, others ...interface
 		}
 	}
 
-<<<<<<< HEAD
-	// default empty
 	if len(others) > 5 {
 		if v, ok := others[5].(string); ok && len(v) > 0 {
 			fmt.Fprintf(&b, "; SameSite=%s", sanitizeValue(v))
 		}
 	}
 
-=======
-	//fmt.Println(fmt.Sprintf("Cookie %v", b.String()))
->>>>>>> 3f021868 (changes)
 	output.Context.ResponseWriter.Header().Add("Set-Cookie", b.String())
 }
 
