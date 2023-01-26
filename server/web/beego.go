@@ -18,7 +18,8 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
-	"fmt"
+
+	"github.com/beego/beego/v2/core/logs"
 )
 
 const (
@@ -50,17 +51,13 @@ func AddAPPStartHook(hf ...hookfunc) {
 // beego.Run("127.0.0.1:8089")
 func Run(params ...string) {
 
-	fmt.Println("############################################")
-	fmt.Println("############################################")
-	fmt.Println("###@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@###")
-	fmt.Println("###@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@###")
-	fmt.Println("###                                      ###")
-	fmt.Println("### Run Beego Mobile Mind Custom Version ###")
-	fmt.Println("###                                      ###")
-	fmt.Println("###@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@###")
-	fmt.Println("###@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@###")
-	fmt.Println("############################################")
-	fmt.Println("############################################")
+	logs.Trace("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+	logs.Trace("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+	logs.Trace("@@@                               @@@")
+	logs.Trace("@@@ Run Beego Mobile Mind Version @@@")
+	logs.Trace("@@@                               @@@")
+	logs.Trace("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+	logs.Trace("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 
 	if len(params) > 0 && params[0] != "" {
 		BeeApp.Run(params[0])
