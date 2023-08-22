@@ -61,8 +61,9 @@ func Run(params ...string) {
 
 	if len(params) > 0 && params[0] != "" {
 		BeeApp.Run(params[0])
+	} else {
+		BeeApp.Run("")
 	}
-	BeeApp.Run("")
 }
 
 // RunWithMiddleWares Run beego application with middlewares.
