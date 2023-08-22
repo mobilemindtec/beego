@@ -659,7 +659,7 @@ func (d *dbBase) Update(ctx context.Context, q dbQuerier, mi *models.ModelInfo, 
 		if mi.Fields.GetByColumn(col).AutoNow {
 			findAutoNow = true
 		}
-		if mi.fields.GetByColumn(col).ignoreUpdate {
+		if mi.Fields.GetByColumn(col).IgnoreUpdate {
 			setNames = append(setNames[0:i], setNames[i+1:]...)
 			setValues = append(setValues[0:i], setValues[i+1:]...)
 		}
