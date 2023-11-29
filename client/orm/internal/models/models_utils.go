@@ -20,8 +20,6 @@ import (
 	"reflect"
 	"strings"
 	"time"
-
-	"github.com/beego/beego/v2/client/orm/internal/logs"
 )
 
 // 1 is attr
@@ -49,6 +47,7 @@ var supportTag = map[string]int{
 	"description":  2,
 	"precision":    2,
 	"ignore_update":  1, 
+	"db_type":      2,
 }
 
 type fn func(string) string
@@ -252,8 +251,6 @@ func ParseStructTag(data string) (attrs map[string]bool, tags map[string]string)
 				v = v[i+1 : len(v)-1]
 				tags[name] = v
 			}
-		} else {
-			logs.DebugLog.Println("unsupport orm tag", v)
 		}
 	}
 	return
