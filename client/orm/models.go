@@ -353,8 +353,8 @@ func (mc *modelCache) register(prefixOrSuffixStr string, prefixOrSuffix bool, mo
 		// models's fullname is pkgpath + struct name
 		name := imodels.GetFullName(typ)
 		if _, ok := mc.getByFullName(name); ok {
-			err = fmt.Errorf("<orm.RegisterModel> model `%s` repeat register, must be unique\n", name)
-			return
+			//err = errors.New("<orm.RegisterModel> model `%s` repeat register, must be unique\n", name)
+			return nil
 		}
 
 		if _, ok := mc.get(table); ok {
