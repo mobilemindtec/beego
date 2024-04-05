@@ -340,10 +340,9 @@ func (v *Validation) setError(err *Error) {
 }
 
 // SetError Set error message for one field in ValidationError
-func (v *Validation) SetError(fieldName string, errMsg string) *Error {
+func (v *Validation) SetError(fieldName string, errMsg string){
 	err := &Error{Key: fieldName, Field: fieldName, Tmpl: errMsg, Message: errMsg}
 	v.setError(err)
-	return err
 }
 
 // Check Apply a group of validators to a field, in order, and return the
