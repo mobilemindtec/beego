@@ -15,8 +15,8 @@
 package web
 
 import (
-	"context"
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -1003,40 +1003,65 @@ func (p *ControllerRegister) ServeHTTP(rw http.ResponseWriter, r *http.Request) 
 	p.chainRoot.filter(ctx, p.getUrlPath(ctx), preFilterParams)
 }
 
-func (p *ControllerRegister) execPanicOnError(execController ControllerInterface, r interface{}) {
-	vc := reflect.ValueOf(execController) //reflect.New(runRouter)				
-	st := reflect.TypeOf(vc.Interface())				
+func (p *ControllerRegister) handleReturn(
+	execController ControllerInterface, rets []interface{}) {
 
-
-	recoverMethod := "Recover"
-	if _, ok := st.MethodByName(recoverMethod); ok {
-		method := vc.MethodByName(recoverMethod)					
-		in := []reflect.Value{}
-		in = append(in, reflect.ValueOf(r))
-		logs.Debug("Recover func found")
-		method.Call(in)					
-	} else {
-		logs.Debug("Recover func NOT found")
+	if len(rets) != 1 {
+		return
 	}
 
-	finallyMethod := "Finally"
-	if _, ok := st.MethodByName(finallyMethod); ok {
-		method := vc.MethodByName(finallyMethod)					
-		var in []reflect.Value		
-		logs.Debug("Finally func found")
-		method.Call(in)					
-	} else {
-		logs.Debug("Finally func NOT found")
-	}	
+	ret := rets[0]
 
-	logs.Error("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-	logs.Error("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-	logs.Error("XXXXXXXXXXXXXXXXXXXX begoo unknow error recover XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-	logs.Error("XXXXXXXXXXXXXX %v", r)
-	logs.Error("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-	logs.Error("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-	
-	panic(r)	
+	if rets != nil {
+		if pre, ok := execController.(PreRender); ok {
+			pre.PreRender(ret)
+		}
+	}
+}
+
+func (p *ControllerRegister) finallyGuaranteed(
+	execController ControllerInterface, err interface{}) {
+
+	if ctrl, ok := execController.(Recover); ok {
+		ctrl.Recover(err)
+	}
+
+	if ctrl, ok := execController.(Finally); ok {
+		ctrl.Finally()
+	}
+
+	panic(err)
+
+	/*
+		recoverMethod := "Recover"
+		if _, ok := st.MethodByName(recoverMethod); ok {
+			method := vc.MethodByName(recoverMethod)
+			in := []reflect.Value{}
+			in = append(in, reflect.ValueOf(r))
+			logs.Debug("Recover func found")
+			method.Call(in)
+		} else {
+			logs.Debug("Recover func NOT found")
+		}
+
+		finallyMethod := "Finally"
+		if _, ok := st.MethodByName(finallyMethod); ok {
+			method := vc.MethodByName(finallyMethod)
+			var in []reflect.Value
+			logs.Debug("Finally func found")
+			method.Call(in)
+		} else {
+			logs.Debug("Finally func NOT found")
+		}
+
+		logs.Error("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+		logs.Error("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+		logs.Error("XXXXXXXXXXXXXXXXXXXX begoo unknow error recover XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+		logs.Error("XXXXXXXXXXXXXX %v", r)
+		logs.Error("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+		logs.Error("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+	*/
+
 }
 
 func (p *ControllerRegister) serveHttp(ctx *beecontext.Context) {
@@ -1242,13 +1267,12 @@ func (p *ControllerRegister) serveHttp(ctx *beecontext.Context) {
 		}
 
 		execController.URLMapping()
-		
-		// call Finally method of controller if unknow errors happen
-		defer func() {			
-			if r := recover(); r != nil {
-				p.execPanicOnError(execController, r)
+
+		defer func() {
+			if err := recover(); err != nil {
+				p.finallyGuaranteed(execController, err)
 			}
-		}()		
+		}()
 
 		if !ctx.ResponseWriter.Started {
 			// exec main logic
@@ -1275,6 +1299,15 @@ func (p *ControllerRegister) serveHttp(ctx *beecontext.Context) {
 					method := vc.MethodByName(runMethod)
 					in := param.ConvertParams(methodParams, method.Type(), ctx)
 					out := method.Call(in)
+					var callReturns []interface{}
+
+					for _, it := range out {
+						callReturns = append(callReturns, it.Interface())
+					}
+
+					if len(callReturns) > 0 {
+						p.handleReturn(execController, callReturns)
+					}
 
 					// For backward compatibility we only handle response if we had incoming methodParams
 					if methodParams != nil {
