@@ -62,7 +62,6 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golang/snappy v0.0.0-20170215233205-553a64147049 // indirect
-	github.com/mobilemindtec/go-utils v0.0.0-20240530014333-15871f2b8bcb // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_model v0.5.0 // indirect
