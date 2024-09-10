@@ -31,11 +31,11 @@ require (
 	github.com/ssdb/gossdb v0.0.0-20180723034631-88f6b59b84ec
 	github.com/stretchr/testify v1.9.0
 	github.com/valyala/bytebufferpool v1.0.0
-	go.etcd.io/etcd/client/v3 v3.5.9
-	go.opentelemetry.io/otel v1.11.2
+	go.etcd.io/etcd/client/v3 v3.5.16
+	go.opentelemetry.io/otel v1.27.0
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.11.2
 	go.opentelemetry.io/otel/sdk v1.11.2
-	go.opentelemetry.io/otel/trace v1.11.2
+	go.opentelemetry.io/otel/trace v1.27.0
 	golang.org/x/crypto v0.24.0
 	golang.org/x/sync v0.7.0
 	google.golang.org/grpc v1.63.0
@@ -70,8 +70,8 @@ require (
 	github.com/siddontang/go v0.0.0-20170517070808-cb568a3e5cc0 // indirect
 	github.com/siddontang/rdb v0.0.0-20150307021120-fc89ed2e418d // indirect
 	github.com/syndtr/goleveldb v0.0.0-20160425020131-cfa635847112 // indirect
-	go.etcd.io/etcd/api/v3 v3.5.13 // indirect
-	go.etcd.io/etcd/client/pkg/v3 v3.5.13 // indirect
+	go.etcd.io/etcd/api/v3 v3.5.16 // indirect
+	go.etcd.io/etcd/client/pkg/v3 v3.5.16 // indirect
 	go.opentelemetry.io/otel/metric v1.27.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
