@@ -50,11 +50,11 @@ func NewCondition() *Condition {
 }
 
 // Raw add raw sql to condition
-func (c Condition) Raw(expr string, sql string) *Condition {
+func (c Condition) Raw(expr string, sql string, args ...interface{}) *Condition {
 	if len(sql) == 0 {
 		panic(fmt.Errorf("<Condition.Raw> sql cannot empty"))
 	}
-	c.params = append(c.params, condValue{exprs: strings.Split(expr, ExprSep), sql: sql, isRaw: true})
+	c.params = append(c.params, condValue{exprs: strings.Split(expr, ExprSep), sql: sql, args: args, isRaw: true})
 	return &c
 }
 

@@ -380,6 +380,7 @@ func (t *dbTables) getCondSQL(cond *Condition, sub bool, tz *time.Location) (whe
 			var args []interface{}
 			if p.isRaw {
 				operSQL = p.sql
+				args = p.args
 			} else {
 				operSQL, args = t.base.GenerateOperatorSQL(mi, fi, operator, p.args, tz)
 			}
@@ -392,6 +393,7 @@ func (t *dbTables) getCondSQL(cond *Condition, sub bool, tz *time.Location) (whe
 
 		}
 	}
+
 
 	if !sub && where != "" {
 		where = "WHERE " + where
