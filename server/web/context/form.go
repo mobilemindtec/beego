@@ -27,7 +27,7 @@ var (
 	sliceOfStrings = reflect.TypeOf([]string(nil))
 )
 
-// ParseForm will parse form values to struct via tag.
+// parseFormToStruct will parse form values to struct via tag.
 // Support for anonymous struct.
 func parseFormToStruct(form url.Values, objT reflect.Type, objV reflect.Value) error {
 	for i := 0; i < objT.NumField(); i++ {
@@ -50,8 +50,9 @@ func parseFormToStruct(form url.Values, objT reflect.Type, objV reflect.Value) e
 			continue
 		}
 
-		value, ok := formValue(tag, form, fieldT)
-		if !ok {
+		value, ok := formFirstValue(tag, form, fieldT)
+
+		if !ok && fieldT.Type.Kind() != reflect.Slice {
 			continue
 		}
 
@@ -168,22 +169,12 @@ func formTagName(fieldT reflect.StructField) (string, bool) {
 	return tag, true
 }
 
-func formValue(tag string, form url.Values, fieldT reflect.StructField) (string, bool) {
+func formFirstValue(tag string, form url.Values, fieldT reflect.StructField) (string, bool) {
 	formValues := form[tag]
-	var value string
 	if len(formValues) == 0 {
 		defaultValue := fieldT.Tag.Get("default")
-		if defaultValue != "" {
-			value = defaultValue
-		} else {
-			return "", false
-		}
+		return defaultValue, defaultValue != ""
 	}
-	if len(formValues) == 1 {
-		value = formValues[0]
-		if value == "" {
-			return "", false
-		}
-	}
-	return value, true
+	val := formValues[0]
+	return val, val != ""
 }

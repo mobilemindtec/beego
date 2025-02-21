@@ -30,6 +30,8 @@ func TestFileCacheStartAndGC(t *testing.T) {
 	assert.NotNil(t, err)
 	err = fc.StartAndGC(`{}`)
 	assert.Nil(t, err)
+	_, err = fc.getCacheFileName("key1")
+	assert.Nil(t, err)
 
 	assert.Equal(t, fc.CachePath, FileCachePath)
 	assert.Equal(t, fc.DirectoryLevel, FileCacheDirectoryLevel)
@@ -47,12 +49,17 @@ func TestFileCacheStartAndGC(t *testing.T) {
 	assert.Equal(t, fc.DirectoryLevel, 2)
 	assert.Equal(t, fc.EmbedExpiry, 0)
 	assert.Equal(t, fc.FileSuffix, ".bin")
+	_, err = fc.getCacheFileName("key1")
+	assert.Nil(t, err)
 
 	err = fc.StartAndGC(fmt.Sprintf(`{"CachePath":"%s","FileSuffix":".bin","DirectoryLevel":"aaa","EmbedExpiry":"0"}`, str))
 	assert.NotNil(t, err)
 
 	err = fc.StartAndGC(fmt.Sprintf(`{"CachePath":"%s","FileSuffix":".bin","DirectoryLevel":"2","EmbedExpiry":"aaa"}`, str))
 	assert.NotNil(t, err)
+
+	_, err = fc.getCacheFileName("key1")
+	assert.Nil(t, err)
 }
 
 func TestFileCacheInit(t *testing.T) {
